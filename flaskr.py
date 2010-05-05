@@ -26,6 +26,15 @@ def init_db():
             db.cursor().executescript(f.read())
         db.commit()
 
+@app.before_request
+def before_request():
+    g.db = connect_db()
+
+@app.after_request
+def after_request(response):
+    g.db.close()
+    return response
+
 
 if __name__ == '__main__':
     app.run()
