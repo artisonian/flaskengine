@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css">
   </head>
   <body id="page">
-    <header>
+    <div id="content">
       <h1>Flaskr</h1>
       <nav>
         {% if not session.logged_in %}
@@ -17,8 +17,6 @@
       {% for message in get_flashed_messages() %}
         <p class="flash">{{ message }}</p>
       {% endfor %}
-    </header>
-    <div id="content">
       {% block body %}{% endblock %}
     </div>
   </body>
