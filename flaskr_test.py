@@ -1,18 +1,17 @@
 import os
 import flaskr
 import unittest
-import tempfile
+import mongoengine
 
 class FlaskrTestCase(unittest.TestCase):
     
     def setUp(self):
-        self.db_fd, flaskr.DATABASE = tempfile.mkstemp()
+        flaskr.DATABASE = 'flaskengine_test'
         self.app = flaskr.app.test_client()
-        flaskr.init_db()
+        self.db = flaskr.connect_db()
     
     def tearDown(self):
-        os.close(self.db_fd)
-        os.unlink(flaskr.DATABASE)
+        self.db.connection.drop_database(flaskr.DATABASE)
     
     def login(self, username, password):
         return self.app.post('/login', data=dict(

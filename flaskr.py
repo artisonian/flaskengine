@@ -1,12 +1,10 @@
 # all the imports
-from __future__ import with_statement # for python 2.5
-from contextlib import closing
-import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, \
     abort, render_template, flash
+import mongoengine
 
 # configuration
-DATABASE = '/tmp/flaskr.db'
+DATABASE = 'flaskengine'
 DEBUG = True
 SECRET_KEY = 'development key'
 USERNAME = 'admin'
@@ -17,37 +15,35 @@ app = Flask(__name__)
 app.secret_key = SECRET_KEY
 app.debug = DEBUG
 
-def connect_db():
-    return sqlite3.connect(DATABASE)
 
-def init_db():
-    with closing(connect_db()) as db:
-        with app.open_resource('schema.sql') as f:
-            db.cursor().executescript(f.read())
-        db.commit()
+class Entry(mongoengine.Document):
+    title = mongoengine.StringField(required=True, max_length=200)
+    text = mongoengine.StringField()
+
+
+def connect_db():
+    return mongoengine.connect(DATABASE)
 
 @app.before_request
 def before_request():
     g.db = connect_db()
 
-@app.after_request
-def after_request(response):
-    g.db.close()
-    return response
+# @app.after_request
+# def after_request(response):
+#     g.db.connection.disconnect()
+#     return response
 
 @app.route('/')
 def show_entries():
-    cur = g.db.execute('SELECT title, text FROM entries ORDER BY id DESC')
-    entries = [dict(title=row[0], text=row[1]) for row in cur.fetchall()]
+    entries = Entry.objects
     return render_template('show_entries.html', entries=entries)
 
 @app.route('/add', methods=['POST'])
 def add_entry():
     if not session.get('logged_in'):
         abort(401)
-    g.db.execute('INSERT INTO entries (title, text) VALUES (?, ?)',
-        [request.form['title'], request.form['text']])
-    g.db.commit()
+    entry = Entry(title=request.form['title'], text=request.form['text'])
+    entry.save()
     flash('New entry was successfully posted')
     return redirect(url_for('show_entries'))
 
