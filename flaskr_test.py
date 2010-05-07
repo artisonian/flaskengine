@@ -40,7 +40,7 @@ class FlaskrTestCase(unittest.TestCase):
         self.login(flaskr.USERNAME, flaskr.PASSWORD)
         response = self.app.post('/add', data=dict(
             title='<Hello>',
-            text='<strong>HTML</strong> allowed here'
+            text='**HTML** allowed here'
         ), follow_redirects=True)
         assert 'No entries so far' not in response.data
         assert '&lt;Hello&gt;' in response.data

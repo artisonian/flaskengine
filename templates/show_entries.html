@@ -17,7 +17,7 @@
     {% for entry in entries %}
       <article>
         <h2>{{ entry.title }}</h2>
-        {{ entry.text|safe }}
+        {{ entry.text|markdown|safe }}
       </article>
     {% else %}
       <p>Unbelievable. No entries so far.</p>

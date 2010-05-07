@@ -2,6 +2,7 @@
 from flask import Flask, request, session, g, redirect, url_for, \
     abort, render_template, flash
 import mongoengine
+import markdown
 import datetime
 
 # configuration
@@ -16,6 +17,10 @@ app = Flask(__name__)
 app.secret_key = SECRET_KEY
 app.debug = DEBUG
 
+def to_markdown(value):
+    return markdown.markdown(value)
+
+app.jinja_env.filters['markdown'] = to_markdown
 
 class Entry(mongoengine.Document):
     title = mongoengine.StringField(required=True, max_length=200)
