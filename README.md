@@ -1,7 +1,11 @@
 FlaskEngine v0.1.0
 ===
 
-[Flaskr](http://flask.pocoo.org/docs/tutorial/ "Flaskr - Flask Tutorial") running on [MongoEngine](http://hmarr.com/mongoengine/ "MongoEngine Docs").
+A replica of [Flaskr](http://flask.pocoo.org/docs/tutorial/ "Flaskr - Flask Tutorial"), using [MongoEngine](http://hmarr.com/mongoengine/ "MongoEngine Docs") for persistence.
+
+## Getting Started
+
+    pip install -r requirements.txt
 
 ## Requirements
 
@@ -11,6 +15,7 @@ FlaskEngine v0.1.0
 
 ## TODO
 
-* Add `requirements.txt` file.
+* Add support for editing and deleting entries.
 * Add support for Markdown extensions.
 * Add license.
+* Improve authentication.
