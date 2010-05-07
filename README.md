@@ -1,11 +1,11 @@
 FlaskEngine v0.1.0
 ===
 
-Flaskr running on MongoEngine.
+[Flaskr](http://flask.pocoo.org/docs/tutorial/ "Flaskr - Flask Tutorial") running on [MongoEngine](http://hmarr.com/mongoengine/ "MongoEngine Docs").
 
 ## Requirements
 
-* flask >= 0.2
+* flask >= 0.2 (in development)
 * mongoengine
 * python-markdown
 
