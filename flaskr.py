@@ -7,30 +7,39 @@ import datetime
 
 # configuration
 DATABASE = 'flaskengine'
-DEBUG = True
+DEBUG = True    # DISABLE while in production
 SECRET_KEY = 'development key'
 USERNAME = 'admin'
 PASSWORD = 'default'
+
+# helpers
+def to_markdown(value):
+    """Converts a string into valid Markdown."""
+    return markdown.markdown(value)
+
+def connect_db():
+    """
+    Connects to a running MongoDB instance and returns
+    a database object.
+    """
+    return mongoengine.connect(DATABASE)
 
 # create our little application :)
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
 app.debug = DEBUG
-
-def to_markdown(value):
-    return markdown.markdown(value)
-
 app.jinja_env.filters['markdown'] = to_markdown
 
+# models
 class Entry(mongoengine.Document):
+    """An Entry document model."""
     title = mongoengine.StringField(required=True, max_length=200)
     text = mongoengine.StringField()
-    created_at = mongoengine.DateTimeField(default=datetime.datetime.now())
+    created_at = mongoengine.DateTimeField(
+        default=datetime.datetime.now())
 
 
-def connect_db():
-    return mongoengine.connect(DATABASE)
-
+# views
 @app.before_request
 def before_request():
     g.db = connect_db()
@@ -49,7 +58,8 @@ def show_entries():
 def add_entry():
     if not session.get('logged_in'):
         abort(401)
-    entry = Entry(title=request.form['title'], text=request.form['text'])
+    entry = Entry(title=request.form['title'],
+        text=request.form['text'])
     entry.save()
     flash('New entry was successfully posted')
     return redirect(url_for('show_entries'))

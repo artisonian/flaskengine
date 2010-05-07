@@ -12,6 +12,5 @@ FlaskEngine v0.1.0
 ## TODO
 
 * Add `requirements.txt` file.
-* Add docstrings.
 * Add support for Markdown extensions.
 * Add license.
