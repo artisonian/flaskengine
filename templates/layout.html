@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Flaskr</title>
+    <title>FlaskEngine</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css">
   </head>
   <body id="page">
     <div id="content">
-      <h1>Flaskr</h1>
+      <h1>FlaskEngine</h1>
       <nav>
         {% if not session.logged_in %}
           <a href="{{ url_for('login') }}">log in</a>

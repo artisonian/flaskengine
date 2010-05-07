@@ -2,6 +2,7 @@
 from flask import Flask, request, session, g, redirect, url_for, \
     abort, render_template, flash
 import mongoengine
+import datetime
 
 # configuration
 DATABASE = 'flaskengine'
@@ -19,6 +20,7 @@ app.debug = DEBUG
 class Entry(mongoengine.Document):
     title = mongoengine.StringField(required=True, max_length=200)
     text = mongoengine.StringField()
+    created_at = mongoengine.DateTimeField(default=datetime.datetime.now())
 
 
 def connect_db():
@@ -35,7 +37,7 @@ def before_request():
 
 @app.route('/')
 def show_entries():
-    entries = Entry.objects
+    entries = Entry.objects.order_by('-created_at')
     return render_template('show_entries.html', entries=entries)
 
 @app.route('/add', methods=['POST'])
