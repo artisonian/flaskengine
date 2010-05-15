@@ -24,5 +24,6 @@ Then point your browser at http://127.0.0.1:5000/
 * Combine `runserver.py` and `runtests.py` into a single `manage.py` script.
 * Add support for editing and deleting entries.
 * Add support for Markdown extensions.
+* Implement entire tumblelog from the [MongoEngine tutorial](http://hmarr.com/mongoengine/tutorial.html).
 * Add license.
 * Improve authentication.
