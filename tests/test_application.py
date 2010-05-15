@@ -1,17 +1,17 @@
 import os
-import flaskr
+import flaskengine
 import unittest
 import mongoengine
 
 class FlaskrTestCase(unittest.TestCase):
     
     def setUp(self):
-        flaskr.DATABASE = 'flaskengine_test'
-        self.app = flaskr.app.test_client()
-        self.db = flaskr.connect_db()
+        flaskengine.DATABASE = 'flaskengine_test'
+        self.app = flaskengine.app.test_client()
+        self.db = flaskengine.connect_db()
     
     def tearDown(self):
-        self.db.connection.drop_database(flaskr.DATABASE)
+        self.db.connection.drop_database(flaskengine.DATABASE)
     
     def login(self, username, password):
         return self.app.post('/login', data=dict(
@@ -27,17 +27,17 @@ class FlaskrTestCase(unittest.TestCase):
         assert 'No entries so far' in response.data
     
     def test_login_logout(self):
-        response = self.login(flaskr.USERNAME, flaskr.PASSWORD)
+        response = self.login(flaskengine.USERNAME, flaskengine.PASSWORD)
         assert 'You have been logged in' in response.data
         response = self.logout()
         assert 'You have been logged out' in response.data
-        response = self.login(flaskr.USERNAME + 'X', flaskr.PASSWORD)
+        response = self.login(flaskengine.USERNAME + 'X', flaskengine.PASSWORD)
         assert 'Invalid username' in response.data
-        response = self.login(flaskr.USERNAME, flaskr.PASSWORD + 'X')
+        response = self.login(flaskengine.USERNAME, flaskengine.PASSWORD + 'X')
         assert 'Invalid password' in response.data
     
     def test_messages(self):
-        self.login(flaskr.USERNAME, flaskr.PASSWORD)
+        self.login(flaskengine.USERNAME, flaskengine.PASSWORD)
         response = self.app.post('/add', data=dict(
             title='<Hello>',
             text='**HTML** allowed here'
@@ -45,6 +45,9 @@ class FlaskrTestCase(unittest.TestCase):
         assert 'No entries so far' not in response.data
         assert '&lt;Hello&gt;' in response.data
         assert '<strong>HTML</strong> allowed here' in response.data
+
+
+suite = unittest.TestLoader().loadTestsFromTestCase(FlaskrTestCase)
 
 
 if __name__ == '__main__':
