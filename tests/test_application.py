@@ -2,16 +2,17 @@ import os
 import flaskengine
 import unittest
 import mongoengine
+from flaskengine import settings
 
 class FlaskrTestCase(unittest.TestCase):
     
     def setUp(self):
-        flaskengine.DATABASE = 'flaskengine_test'
+        settings.DATABASE = 'flaskengine_test'
         self.app = flaskengine.app.test_client()
         self.db = flaskengine.connect_db()
     
     def tearDown(self):
-        self.db.connection.drop_database(flaskengine.DATABASE)
+        self.db.connection.drop_database(settings.DATABASE)
     
     def login(self, username, password):
         return self.app.post('/login', data=dict(
@@ -27,17 +28,17 @@ class FlaskrTestCase(unittest.TestCase):
         assert 'No entries so far' in response.data
     
     def test_login_logout(self):
-        response = self.login(flaskengine.USERNAME, flaskengine.PASSWORD)
+        response = self.login(settings.USERNAME, settings.PASSWORD)
         assert 'You have been logged in' in response.data
         response = self.logout()
         assert 'You have been logged out' in response.data
-        response = self.login(flaskengine.USERNAME + 'X', flaskengine.PASSWORD)
+        response = self.login(settings.USERNAME + 'X', settings.PASSWORD)
         assert 'Invalid username' in response.data
-        response = self.login(flaskengine.USERNAME, flaskengine.PASSWORD + 'X')
+        response = self.login(settings.USERNAME, settings.PASSWORD + 'X')
         assert 'Invalid password' in response.data
     
     def test_messages(self):
-        self.login(flaskengine.USERNAME, flaskengine.PASSWORD)
+        self.login(settings.USERNAME, settings.PASSWORD)
         response = self.app.post('/add', data=dict(
             title='<Hello>',
             text='**HTML** allowed here'
